@@ -116,4 +116,12 @@ cv-document-classification/
 
 ### Reference
 
-- _Insert related reference_
+- [PyTorch 공식 문서](https://pytorch.org/docs/stable/index.html)
+- [torchvision](https://pytorch.org/vision/stable/index.html)
+- [Dataset & DataLoader 튜토리얼](https://pytorch.org/tutorials/beginner/data_loading_tutorial.html)
+- [Transfer Learning 튜토리얼](https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html)
+- [PyTorch Lightning (선택)](https://lightning.ai/docs/pytorch/stable/)
+- [Hydra 공식 문서](https://hydra.cc/docs/intro/)
+- [Weights & Biases](https://docs.wandb.ai/)
+- [albumentations](https://albumentations.ai/docs/)
+- [augraphy](https://augraphy.com/)
