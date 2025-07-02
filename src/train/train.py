@@ -40,6 +40,9 @@ def train(cfg):
     trainer.fit(model, datamodule=dm)
 
     # 모델 저장
+    if not os.path.exists(os.path.join(ROOT_DIR, "artifacts")):
+        os.makedirs(os.path.join(ROOT_DIR, "artifacts"))
+    
     model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}.pt")
     torch.save(model.state_dict(), model_path)
     artifact = wandb.Artifact(name = f"{cfg.model.name}", type="model")
