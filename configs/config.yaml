@@ -1,0 +1,7 @@
+defaults:
+  - model: resnet
+  - data: document
+  - train: default
+
+project_name: document-classification
+seed: 42
