@@ -2,6 +2,7 @@ defaults:
   - model: resnet
   - data: document
   - train: default
+  - wandb: wandb
 
 project_name: document-classification
 seed: 42

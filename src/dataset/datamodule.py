@@ -2,7 +2,7 @@ from sklearn.model_selection import train_test_split
 import pytorch_lightning as pl
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-from augraphy import AugraphyPipeline, InkBleed, Brightness, NoiseTexturize
+from augraphy import AugraphyPipeline, Folding, InkBleed, Brightness, NoiseTexturize, PaperFactory
 import pandas as pd
 import os
 import hydra
@@ -26,25 +26,21 @@ class DocumentDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.val_split = val_split
         self.df = pd.read_csv(os.path.join(self.data_dir, "train.csv")).values
+
         # AugraphyPipeline 정의
         aug_pipeline = AugraphyPipeline(
             ink_phase=[InkBleed(
-                intensity_range=(0.4, 0.7),
+                intensity_range=(0.1, 0.3),
                 kernel_size=(5, 5),
                 severity=(0.2, 0.4)
             )],
-            paper_phase=[],
+            paper_phase=[
+            ],
             post_phase=[
                 Brightness(
                     brightness_range=(0.7, 1.3),
                     min_brightness=0,
                 ),
-                NoiseTexturize(
-                    sigma_range=(2, 3),
-                    turbulence_range=(2, 5),
-                    texture_width_range=(50, 500),
-                    texture_height_range=(50, 500),
-                )
             ]
         )
 
@@ -53,6 +49,7 @@ class DocumentDataModule(pl.LightningDataModule):
             transforms.Lambda(lambda x: np.array(x)),
             aug_pipeline,
             transforms.Lambda(lambda x: Image.fromarray(x)),
+            transforms.RandomRotation(degrees=(-160, 160)),
             transforms.Resize((224, 224)),
             transforms.ToTensor()
         ])
@@ -61,15 +58,18 @@ class DocumentDataModule(pl.LightningDataModule):
         self.test_dataset = None
 
     def setup(self, stage=None):
-        train_df, val_df = train_test_split(
-            self.df,
-            test_size=self.val_split,
-            stratify=self.df[:, 1],  # 라벨 기준 stratify
-            random_state=42
-        )
-        self.train_dataset = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.5, transform=self.transform)
-        self.val_dataset = DocumentDataset(val_df, self.data_dir)
-        self.test_dataset = TestDataset(self.data_dir)
+        if stage == "fit" or stage is None:
+            train_df, val_df = train_test_split(
+                self.df,
+                test_size=self.val_split,
+                stratify=self.df[:, 1],
+                random_state=42
+            )
+            self.train_dataset = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, transform=self.transform)
+            self.val_dataset = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, transform=self.transform)
+
+        if stage == "predict" or stage is None:
+            self.test_dataset = TestDataset(self.data_dir)
         # full_dataset = ImageFolder(os.path.join(self.data_dir, "train"))
         # train_label_csv = pd.read_csv(os.path.join(self.data_dir, "train.csv"))
         # targets = full_dataset.targets  # 클래스 인덱스 리스트
@@ -98,7 +98,7 @@ class DocumentDataModule(pl.LightningDataModule):
             raise ValueError("val_dataset is not initialized")
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
     
-    def test_dataloader(self):
+    def predict_dataloader(self):
         if self.test_dataset is None:
             raise ValueError("test_dataset is not initialized")
         return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
