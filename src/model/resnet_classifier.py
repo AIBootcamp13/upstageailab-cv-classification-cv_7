@@ -25,7 +25,19 @@ class ResNetClassifier(pl.LightningModule):
 
         #모델 초기화 및 헤드 변경
         self.model = resnet18(pretrained=True)
+
+        # 모델 freeze
+        for param in self.model.parameters():
+            param.requires_grad = False
+
+        # 마지막 레이어 헤드 초기화
         self.model.fc = nn.Linear(self.model.fc.in_features, self.num_classes)
+        for param in self.model.fc.parameters():
+          param.requires_grad = True
+        
+        # layer4도 학습 가능하게
+        for param in self.model.layer4.parameters():
+          param.requires_grad = True
 
         #F1 초기화
         self.train_f1 = F1Score(task="multiclass", num_classes=self.num_classes, average="macro")

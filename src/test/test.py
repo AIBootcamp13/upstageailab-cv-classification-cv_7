@@ -40,6 +40,7 @@ def test(cfg):
         all_preds.extend(batch_output["pred"].cpu().numpy())
     
     pred_df = pd.DataFrame({"ID": all_img_names, "target": all_preds})
+    pred_df = pred_df.sort_values(by="ID")
     pred_df.to_csv(os.path.join(ROOT_DIR, f"{cfg.model.name}.csv"), index=False)
 
     # wandb.finish()
