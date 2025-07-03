@@ -3,6 +3,7 @@ from torch.utils.data import Dataset
 import os
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+import numpy as np
 
 class TestDataset(Dataset):
     def __init__(self, data_dir):
@@ -16,6 +17,7 @@ class TestDataset(Dataset):
         img_name = self.image_list[idx]
         img_path = os.path.join(self.data_dir, "test", img_name)
         image = Image.open(img_path).convert("RGB")
+        image = np.array(image)
 
         image = A.Compose([
             A.Resize(height=224, width=224),

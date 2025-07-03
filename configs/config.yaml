@@ -1,5 +1,5 @@
 defaults:
-  - model: resnet
+  - model: resnet18
   - data: document
   - train: default
   - wandb: wandb
