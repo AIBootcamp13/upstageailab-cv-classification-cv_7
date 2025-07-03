@@ -1,3 +1,0 @@
-_target_: src.model.resnet_classifier.ResNetClassifier
-lr: 5e-3
-num_classes: 17

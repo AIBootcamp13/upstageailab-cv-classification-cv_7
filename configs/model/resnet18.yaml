@@ -1,0 +1,4 @@
+_target_: src.model.resnet18_classifier.ResNetClassifier
+lr: 5e-3
+num_classes: 17
+name: resnet18
