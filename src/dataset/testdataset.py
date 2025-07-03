@@ -1,7 +1,8 @@
 from PIL import Image
 from torch.utils.data import Dataset
 import os
-from torchvision import transforms
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 class TestDataset(Dataset):
     def __init__(self, data_dir):
@@ -16,10 +17,10 @@ class TestDataset(Dataset):
         img_path = os.path.join(self.data_dir, "test", img_name)
         image = Image.open(img_path).convert("RGB")
 
-        image = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])(image)
+        image = A.Compose([
+            A.Resize(height=224, width=224),
+            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ToTensorV2()
+        ])(image=image)['image']
 
         return image, img_name  # label 없음

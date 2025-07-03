@@ -1,14 +1,19 @@
 from sklearn.model_selection import train_test_split
 import pytorch_lightning as pl
+import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from augraphy import AugraphyPipeline, Folding, InkBleed, Brightness, NoiseTexturize, PaperFactory
+
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 import pandas as pd
 import os
 import hydra
 import sys
 import numpy as np
 from PIL import Image
+
 # 현재 파일 기준으로 프로젝트 루트 경로 찾기
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
@@ -28,11 +33,16 @@ class DocumentDataModule(pl.LightningDataModule):
         self.df = pd.read_csv(os.path.join(self.data_dir, "train.csv")).values
 
         # AugraphyPipeline 정의
-        aug_pipeline = AugraphyPipeline(
+        self.aug_pipeline = AugraphyPipeline(
             ink_phase=[InkBleed(
-                intensity_range=(0.1, 0.3),
+                intensity_range=(0.5, 0.9),
                 kernel_size=(5, 5),
                 severity=(0.2, 0.4)
+            ),
+            NoiseTexturize(
+                sigma_range=(6, 9),
+                turbulence_range=(2, 4),
+                p=0.5
             )],
             paper_phase=[
             ],
@@ -44,15 +54,18 @@ class DocumentDataModule(pl.LightningDataModule):
             ]
         )
 
+        self.transform = A.Compose([
+            A.Resize(height=224, width=224),
+            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ToTensorV2()
+        ])
+
         # 최종 transform
-        self.transform = transforms.Compose([
-            transforms.Lambda(lambda x: np.array(x)),
-            aug_pipeline,
-            transforms.Lambda(lambda x: Image.fromarray(x)),
-            transforms.RandomRotation(degrees=(-160, 160)),
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        self.transform_rotation = A.Compose([
+            A.Rotate(limit=160, p=0.8),
+            A.Resize(height=224, width=224),
+            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ToTensorV2()
         ])
         self.train_dataset = None
         self.val_dataset = None
@@ -66,8 +79,11 @@ class DocumentDataModule(pl.LightningDataModule):
                 stratify=self.df[:, 1],
                 random_state=42
             )
-            self.train_dataset = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, transform=self.transform)
-            self.val_dataset = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, transform=self.transform)
+            self.train_dataset_no_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_rotation)
+            self.train_dataset_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
+            self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy])
+            
+            self.val_dataset = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
 
         if stage == "predict" or stage is None:
             self.test_dataset = TestDataset(self.data_dir)
