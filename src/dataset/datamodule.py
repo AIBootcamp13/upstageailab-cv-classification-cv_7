@@ -119,8 +119,10 @@ class DocumentDataModule(pl.LightningDataModule):
             self.train_dataset_shadow = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_shadow)
             self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise, self.train_dataset_blur, self.train_dataset_shadow])
             
-            self.val_dataset = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
-
+            self.val_dataset_no_augraphy = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_rotation)
+            self.val_dataset_augraphy = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
+            self.val_dataset = torch.utils.data.ConcatDataset([self.val_dataset_no_augraphy, self.val_dataset_augraphy])
+            
         if stage == "predict" or stage is None:
             self.test_dataset = TestDataset(self.data_dir)
         # full_dataset = ImageFolder(os.path.join(self.data_dir, "train"))
