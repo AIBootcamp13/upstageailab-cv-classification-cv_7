@@ -60,13 +60,46 @@ class DocumentDataModule(pl.LightningDataModule):
             ToTensorV2()
         ])
 
-        # 최종 transform
+        # 회전 변환
         self.transform_rotation = A.Compose([
             A.Rotate(limit=160, p=0.8),
             A.Resize(height=224, width=224),
             A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ToTensorV2()
         ])
+
+        # 가우스 노이즈 변환
+        self.transform_gaussNoise = A.Compose([
+          A.GaussNoise(std_range=(0.1, 0.2), p=0.8),
+          A.Rotate(limit=160, p=0.8),
+          A.Resize(height=224, width=224),
+          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+          ToTensorV2()
+        ])
+
+        # 블러 변환
+        self.transform_blur = A.Compose([
+          A.MotionBlur(blur_limit=(8,13), p=0.8),
+          A.Rotate(limit=160, p=0.8),
+          A.Resize(height=224, width=224),
+          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+          ToTensorV2()
+        ])
+
+        # 그림자 변환
+        self.transform_shadow = A.Compose([
+          A.RandomShadow(
+            shadow_roi=(0, 0, 1, 1),
+            num_shadows_limit=(1, 3), 
+            shadow_dimension=6, 
+            shadow_intensity_range=(0.2, 0.4),
+            p=0.8),
+          A.Rotate(limit=160, p=0.8),
+          A.Resize(height=224, width=224),
+          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+          ToTensorV2()
+        ])
+
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
@@ -81,7 +114,10 @@ class DocumentDataModule(pl.LightningDataModule):
             )
             self.train_dataset_no_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_rotation)
             self.train_dataset_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
-            self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy])
+            self.train_dataset_gaussNoise = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_gaussNoise)
+            self.train_dataset_blur = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_blur)
+            self.train_dataset_shadow = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_shadow)
+            self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise, self.train_dataset_blur, self.train_dataset_shadow])
             
             self.val_dataset = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
 
