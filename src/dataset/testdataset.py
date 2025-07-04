@@ -6,9 +6,10 @@ from albumentations.pytorch import ToTensorV2
 import numpy as np
 
 class TestDataset(Dataset):
-    def __init__(self, data_dir):
+    def __init__(self, data_dir, transform=None):
         self.data_dir = data_dir
         self.image_list = os.listdir(os.path.join(self.data_dir, "test"))
+        self.transform = transform
         
     def __len__(self):
         return len(self.image_list)
@@ -19,10 +20,8 @@ class TestDataset(Dataset):
         image = Image.open(img_path).convert("RGB")
         image = np.array(image)
 
-        image = A.Compose([
-            A.Resize(height=224, width=224),
-            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            ToTensorV2()
-        ])(image=image)['image']
+        if self.transform:
+            image = self.transform(image=image)
+            image = image['image'] #(C,H,W) tensor 포맷
 
         return image, img_name  # label 없음

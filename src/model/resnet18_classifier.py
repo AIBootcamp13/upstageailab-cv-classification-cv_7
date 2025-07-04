@@ -90,7 +90,7 @@ class ResNetClassifier(pl.LightningModule):
         logits = self(x)
         preds = torch.argmax(logits, dim=1)
 
-        return {"img_name": img_name, "pred": preds}
+        return {"img_name": img_name, "pred": preds, "logits": logits}
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.lr)

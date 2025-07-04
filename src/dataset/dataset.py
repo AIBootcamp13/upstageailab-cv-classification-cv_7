@@ -3,8 +3,7 @@ from torch.utils.data import Dataset
 import os
 import random
 import numpy as np
-from torchvision import transforms
-from augraphy import AugraphyPipeline, Folding, InkBleed, Brightness, NoiseTexturize, PaperFactory
+
 class DocumentDataset(Dataset):
     def __init__(self, df_subset, data_dir, apply_transform_prob = 1.0, aug_pipeline=None, transform=None):
         self.df = df_subset
