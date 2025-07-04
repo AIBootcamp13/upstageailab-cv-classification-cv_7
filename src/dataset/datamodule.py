@@ -22,6 +22,7 @@ if ROOT_DIR not in sys.path:
 from omegaconf import DictConfig
 from src.dataset.dataset import DocumentDataset
 from src.dataset.testdataset import TestDataset
+from src.transform.custom_transform import get_augraphy_transform, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow
 
 class DocumentDataModule(pl.LightningDataModule):
     def __init__(self, data_dir="data", batch_size=32, num_workers=4, val_split=0.2):
@@ -33,72 +34,22 @@ class DocumentDataModule(pl.LightningDataModule):
         self.df = pd.read_csv(os.path.join(self.data_dir, "train.csv")).values
 
         # AugraphyPipeline 정의
-        self.aug_pipeline = AugraphyPipeline(
-            ink_phase=[InkBleed(
-                intensity_range=(0.5, 0.9),
-                kernel_size=(5, 5),
-                severity=(0.2, 0.4)
-            ),
-            NoiseTexturize(
-                sigma_range=(6, 9),
-                turbulence_range=(2, 4),
-                p=0.5
-            )],
-            paper_phase=[
-            ],
-            post_phase=[
-                Brightness(
-                    brightness_range=(0.7, 1.3),
-                    min_brightness=0,
-                ),
-            ]
-        )
+        self.aug_pipeline = get_augraphy_transform()
 
-        self.transform = A.Compose([
-            A.Resize(height=224, width=224),
-            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            ToTensorV2()
-        ])
+
+        self.transform = get_transform_rotation()
 
         # 회전 변환
-        self.transform_rotation = A.Compose([
-            A.Rotate(limit=160, p=0.8),
-            A.Resize(height=224, width=224),
-            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            ToTensorV2()
-        ])
+        self.transform_rotation = get_transform_rotation()
 
         # 가우스 노이즈 변환
-        self.transform_gaussNoise = A.Compose([
-          A.GaussNoise(std_range=(0.1, 0.2), p=0.8),
-          A.Rotate(limit=160, p=0.8),
-          A.Resize(height=224, width=224),
-          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-          ToTensorV2()
-        ])
+        self.transform_gaussNoise = get_transform_gaussNoise()
 
         # 블러 변환
-        self.transform_blur = A.Compose([
-          A.MotionBlur(blur_limit=(8,13), p=0.8),
-          A.Rotate(limit=160, p=0.8),
-          A.Resize(height=224, width=224),
-          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-          ToTensorV2()
-        ])
+        self.transform_blur = get_transform_blur()
 
         # 그림자 변환
-        self.transform_shadow = A.Compose([
-          A.RandomShadow(
-            shadow_roi=(0, 0, 1, 1),
-            num_shadows_limit=(1, 3), 
-            shadow_dimension=6, 
-            shadow_intensity_range=(0.2, 0.4),
-            p=0.8),
-          A.Rotate(limit=160, p=0.8),
-          A.Resize(height=224, width=224),
-          A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-          ToTensorV2()
-        ])
+        self.transform_shadow = get_transform_shadow()
 
         self.train_dataset = None
         self.val_dataset = None
@@ -122,7 +73,7 @@ class DocumentDataModule(pl.LightningDataModule):
             self.val_dataset_no_augraphy = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_rotation)
             self.val_dataset_augraphy = DocumentDataset(val_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
             self.val_dataset = torch.utils.data.ConcatDataset([self.val_dataset_no_augraphy, self.val_dataset_augraphy])
-            
+
         if stage == "predict" or stage is None:
             self.test_dataset = TestDataset(self.data_dir)
         # full_dataset = ImageFolder(os.path.join(self.data_dir, "train"))
