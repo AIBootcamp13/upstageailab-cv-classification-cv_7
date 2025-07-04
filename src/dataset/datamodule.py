@@ -80,7 +80,7 @@ class DocumentDataModule(pl.LightningDataModule):
             self.val_dataset = torch.utils.data.ConcatDataset([self.val_dataset_no_augraphy, self.val_dataset_augraphy])
 
         if stage == "predict" or stage is None:
-            self.test_dataset = TestDataset(self.data_dir)
+            self.test_dataset = TestDataset(self.data_dir, transform=self.transform_test)
         # full_dataset = ImageFolder(os.path.join(self.data_dir, "train"))
         # train_label_csv = pd.read_csv(os.path.join(self.data_dir, "train.csv"))
         # targets = full_dataset.targets  # 클래스 인덱스 리스트
