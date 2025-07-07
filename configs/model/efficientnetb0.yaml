@@ -2,3 +2,4 @@ _target_: src.model.efficientNetB0_classifier.EfficientNetB0Classifier
 lr: 5e-3
 num_classes: 17
 name: efficientnetb0
+weight_decay: 1e-2

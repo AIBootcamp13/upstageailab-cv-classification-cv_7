@@ -25,7 +25,7 @@ def test(cfg):
     dm = DocumentDataModule(**cfg.data)
     dm.setup("predict")
 
-    model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}.pt")
+    model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}", f"{cfg.model.name}.pt")
     model = instantiate(cfg.model)
     model.load_state_dict(torch.load(model_path))
 
