@@ -23,20 +23,23 @@ class DocumentDataModule(pl.LightningDataModule):
     data_dir="data", 
     batch_size=32, 
     num_workers=4, 
-    val_split=0.2, 
-    image_size=(224, 224), 
-    image_normalization={"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}, 
+    num_folds=5, 
+    fold=0, 
+    fold_path=f"{ROOT_DIR}/data/train_fold.csv", 
+    image_size=(224, 224),
+    image_normalization={"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]},
     apply_transform_prob=0.8):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.val_split = val_split
+        self.fold = fold
+        self.fold_path = fold_path
         self.image_size = image_size
         self.image_normalization = image_normalization
         self.apply_transform_prob = apply_transform_prob
 
-        self.df = pd.read_csv(os.path.join(self.data_dir, "train.csv")).values
+        self.df = pd.read_csv(self.fold_path)
 
         # AugraphyPipeline 정의
         self.aug_pipeline = get_augraphy_transform()
@@ -62,12 +65,9 @@ class DocumentDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            train_df, val_df = train_test_split(
-                self.df,
-                test_size=self.val_split,
-                stratify=self.df[:, 1],
-                random_state=42
-            )
+            train_df = self.df[self.df["kfold"] != self.fold][["ID", "target"]].values
+            val_df = self.df[self.df["kfold"] == self.fold][["ID", "target"]].values
+            
             self.train_dataset_no_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_rotation)
             self.train_dataset_augraphy = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
             self.train_dataset_gaussNoise = DocumentDataset(train_df, self.data_dir, apply_transform_prob=0.8, aug_pipeline=None, transform=self.transform_gaussNoise)

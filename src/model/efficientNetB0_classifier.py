@@ -2,7 +2,11 @@ import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
-from torchvision.models import resnet18
+import timm
+
+from torchinfo import summary
+from torchview import draw_graph
+
 import hydra
 from hydra.utils import instantiate
 import os
@@ -15,8 +19,8 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-class ResNetClassifier(pl.LightningModule):
-    def __init__(self, num_classes: int = 17, lr: float = 1e-3, name: str = "resnet"):
+class EfficientNetB0Classifier(pl.LightningModule):
+    def __init__(self, num_classes: int = 17, lr: float = 1e-3, name: str = "efficientnetb0"):
         super().__init__()
         self.save_hyperparameters()
         self.num_classes = num_classes
@@ -24,20 +28,26 @@ class ResNetClassifier(pl.LightningModule):
         self.name = name
 
         #모델 초기화 및 헤드 변경
-        self.model = resnet18(pretrained=True)
+        self.model = timm.create_model("efficientnet_b0", pretrained=True)
 
         # 모델 freeze
         for param in self.model.parameters():
             param.requires_grad = False
 
         # 마지막 레이어 헤드 초기화
-        self.model.fc = nn.Linear(self.model.fc.in_features, self.num_classes)
-        for param in self.model.fc.parameters():
-          param.requires_grad = True
+        self.model.classifier = nn.Linear(self.model.classifier.in_features, self.num_classes)
+        # for param in self.model.classifier.parameters():
+        #   param.requires_grad = True
         
-        # layer4도 학습 가능하게
-        for param in self.model.layer4.parameters():
-          param.requires_grad = True
+        for name, param in self.model.named_parameters():
+          if (
+              'blocks.5' in name              # 마지막 MBConv 블록
+              or 'blocks.6' in name              # 마지막 MBConv 블록
+              or 'conv_head' in name          # 마지막 Conv
+              or 'bn2' in name                # 마지막 BN
+              or 'classifier' in name         # 최종 FC
+          ):
+              param.requires_grad = True
 
         #F1 초기화
         self.train_f1 = F1Score(task="multiclass", num_classes=self.num_classes, average="macro")
@@ -95,9 +105,16 @@ class ResNetClassifier(pl.LightningModule):
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.lr)
 
+def print_module_tree(model, indent=0):
+    for name, module in model.named_children():
+        print("  " * indent + f"📦 {name} → {module.__class__.__name__}")
+        print_module_tree(module, indent + 1)
+
 @hydra.main(config_path="../../configs", config_name="config")
 def main(cfg):
     model = instantiate(cfg.model)
+    for name, param in model.named_parameters():
+        print(name, param.requires_grad)
 
 if __name__ == "__main__":
     main()

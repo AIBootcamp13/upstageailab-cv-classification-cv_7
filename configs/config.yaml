@@ -1,6 +1,6 @@
 defaults:
-  - model: resnet18
-  - data: document
+  - model: efficientnetb0
+  - data: document_kfold
   - train: default
   - wandb: wandb
 
