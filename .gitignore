@@ -217,7 +217,7 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,virtualenv,jupyternotebooks,visualstudiocode
 
-data/
+./data/
 outputs/
 *.png
 *.jpg

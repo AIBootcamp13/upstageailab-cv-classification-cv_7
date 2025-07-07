@@ -1,0 +1,6 @@
+data_dir: ${hydra:runtime.cwd}/data
+batch_size: 64
+num_workers: 32
+fold: 0
+num_folds: 5
+fold_path: ${hydra:runtime.cwd}/data/train_fold.csv
