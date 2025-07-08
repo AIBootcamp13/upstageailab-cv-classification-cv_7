@@ -28,7 +28,9 @@ def train(cfg):
 
     # kfold csv 없을 시 실행
     if not os.path.exists(cfg.data.fold_path):
-        df = make_stratified_kfold(pd.read_csv(f"{ROOT_DIR}/data/train.csv"), n_splits=cfg.data.num_folds, seed=42)
+        os.makedirs(os.path.dirname(cfg.data.fold_path), exist_ok=True)
+        train_csv_path = os.path.join(ROOT_DIR, "data", "train.csv")
+        df = make_stratified_kfold(pd.read_csv(train_csv_path), n_splits=cfg.data.num_folds, seed=42)
         df.to_csv(cfg.data.fold_path, index=False)
 
      # 모델 저장 폴더 생성
@@ -38,6 +40,8 @@ def train(cfg):
     for fold in range(cfg.data.num_folds):
         start_time = time.time()
 
+        wandb.init(mode="offline") # 추후 제거!!!!
+        
         wandb_logger = WandbLogger(
             project=cfg.wandb.project,
             entity=cfg.wandb.entity,

@@ -44,7 +44,7 @@ def get_transform_rotation(image_size=(224, 224), image_normalization={"mean": [
 
 def get_transform_gaussNoise(image_size=(224, 224), image_normalization={"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}):
     return A.Compose([
-        A.GaussNoise(std_range=(0.1, 0.2), p=0.8),
+        A.GaussNoise(var_limit=(0.01, 0.04), p=0.8),
         A.Rotate(limit=160, p=0.8),
         A.Resize(height=image_size[0], width=image_size[1]),
         A.Normalize(mean=image_normalization["mean"], std=image_normalization["std"]),
