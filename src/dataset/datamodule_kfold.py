@@ -16,6 +16,7 @@ if ROOT_DIR not in sys.path:
 from omegaconf import DictConfig
 from src.dataset.dataset import DocumentDataset
 from src.dataset.testdataset import TestDataset
+from src.dataset.analyzedataset import AnalyzeDataset
 from src.transform.custom_transform_ratio import get_augraphy_transform, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow, get_transform_norm_tensor, get_transform_brightness, get_transform_img_comp, get_transform_coarse_dropout
 
 class DocumentDataModule(pl.LightningDataModule):
@@ -73,6 +74,7 @@ class DocumentDataModule(pl.LightningDataModule):
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
+        self.analyze_dataset = None
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
@@ -93,8 +95,16 @@ class DocumentDataModule(pl.LightningDataModule):
             self.val_dataset_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
             self.val_dataset = torch.utils.data.ConcatDataset([self.val_dataset_no_augraphy, self.val_dataset_augraphy])
 
-        if stage == "predict" or stage is None:
+        if stage == "predict":
             self.test_dataset = TestDataset(self.data_dir, transform=self.transform_test)
+
+        if stage == "analyze":
+            print("analyzed")
+            analyze_df = self.df[self.df["kfold"] == self.fold][["ID", "target"]].values
+            self.analyze_dataset_no_augraphy = AnalyzeDataset(analyze_df, self.data_dir, aug_pipeline=None, transform=self.transform_rotation)
+            self.analyze_dataset_augraphy = AnalyzeDataset(analyze_df, self.data_dir, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
+            self.analyze_dataset = torch.utils.data.ConcatDataset([self.analyze_dataset_no_augraphy, self.analyze_dataset_augraphy])
+
         # full_dataset = ImageFolder(os.path.join(self.data_dir, "train"))
         # train_label_csv = pd.read_csv(os.path.join(self.data_dir, "train.csv"))
         # targets = full_dataset.targets  # 클래스 인덱스 리스트
@@ -123,6 +133,11 @@ class DocumentDataModule(pl.LightningDataModule):
             raise ValueError("val_dataset is not initialized")
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers, persistent_workers=self.persistent_workers)
     
+    def analyze_dataloader(self):
+        if self.analyze_dataset is None:
+            raise ValueError("analyze_dataset is not initialized")
+        return DataLoader(self.analyze_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+
     def predict_dataloader(self):
         if self.test_dataset is None:
             raise ValueError("test_dataset is not initialized")

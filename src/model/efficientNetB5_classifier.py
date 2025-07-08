@@ -70,6 +70,7 @@ class EfficientNetB5Classifier(pl.LightningModule):
 
         self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True)
         self.log("train/acc", acc, prog_bar=True, on_step=True, on_epoch=True)
+
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -103,6 +104,16 @@ class EfficientNetB5Classifier(pl.LightningModule):
         preds = torch.argmax(logits, dim=1)
 
         return {"img_name": img_name, "pred": preds, "logits": logits}
+
+    def predict_step_analyze(self, batch):
+        x, img_name, label = batch
+
+        x = x.to(self.device)
+        label = label.to(self.device)
+
+        logits = self(x)
+        preds = torch.argmax(logits, dim=1)
+        return {"img_name": img_name, "img": x.cpu(), "pred": preds.cpu().numpy(), "label": label.cpu().numpy()}
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
