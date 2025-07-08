@@ -5,11 +5,10 @@ import random
 import numpy as np
 
 class DocumentDataset(Dataset):
-    def __init__(self, df_subset, data_dir, apply_transform_prob = 1.0, aug_pipeline=None, transform=None):
+    def __init__(self, df_subset, data_dir, aug_pipeline=None, transform=None):
         self.df = df_subset
         self.data_dir = data_dir
         self.transform = transform
-        self.apply_transform_prob = apply_transform_prob
         self.aug_pipeline = aug_pipeline
 
     def __len__(self):
@@ -31,8 +30,9 @@ class DocumentDataset(Dataset):
         #     image = self.aug_pipeline(image)
 
         if self.transform:
-            image = self.transform(image=image)
-            image = image['image'] #(C,H,W) tensor 포맷
+            for transform in self.transform:
+                image = transform(image=image)
+                image = image['image'] 
         
 
         return image, label

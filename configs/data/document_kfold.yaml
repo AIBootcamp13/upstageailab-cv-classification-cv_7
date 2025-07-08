@@ -1,6 +1,12 @@
-    data_dir: ${hydra:runtime.cwd}/../../data
-    batch_size: 64
-    num_workers: 32
-    fold: 0
-    num_folds: 5
-    fold_path: ${hydra:runtime.cwd}/../../data/train_fold.csv
+data_dir: ${hydra:runtime.cwd}/../../data
+batch_size: 32
+num_workers: 4
+persistent_workers: true
+fold: 0
+num_folds: 5
+fold_path: ${hydra:runtime.cwd}/../../data/train_fold.csv
+image_size: [456, 456]
+image_normalization:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+apply_transform_prob: 0.8
