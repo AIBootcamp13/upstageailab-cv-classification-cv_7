@@ -24,16 +24,19 @@ from src.utils.skf import make_stratified_kfold
 def train(cfg):
     wandb.login()
 
-    model_path = os.path.join(ROOT_DIR, "artifacts")
+    # 모델 저장 패스 생성
+    if not os.path.exists(os.path.join(ROOT_DIR, "artifacts")):
+        os.makedirs(os.path.join(ROOT_DIR, "artifacts"))
+    
+    if not os.path.exists(os.path.join(ROOT_DIR, "artifacts", cfg.model.name)):
+        os.makedirs(os.path.join(ROOT_DIR, "artifacts", cfg.model.name))
+
+    model_path = os.path.join(ROOT_DIR, "artifacts", cfg.model.name)
 
     # kfold csv 없을 시 실행
     if not os.path.exists(cfg.data.fold_path):
         df = make_stratified_kfold(pd.read_csv(f"{ROOT_DIR}/data/train.csv"), n_splits=cfg.data.num_folds, seed=42)
         df.to_csv(cfg.data.fold_path, index=False)
-
-     # 모델 저장 폴더 생성
-    if not os.path.exists(os.path.join(ROOT_DIR, "artifacts")):
-        os.makedirs(os.path.join(ROOT_DIR, "artifacts"))
 
     for fold in range(cfg.data.num_folds):
         start_time = time.time()
@@ -50,7 +53,7 @@ def train(cfg):
         early_stop_callback = EarlyStopping(
             monitor="val/f1",   # 기준 지표 (validation loss 또는 val_acc 등)
             mode="max",          
-            patience=3,           # 성능이 개선되지 않는 epoch 수
+            patience=4,           # 성능이 개선되지 않는 epoch 수
             verbose=True
         )
 
@@ -81,7 +84,7 @@ def train(cfg):
             print(f"Best F1 score: {best_f1:.4f}")
 
             wandb_logger.experiment.log({"training_time_sec": total_time_sec, "training_time_min": total_time_min, "best_f1": best_f1})
-            pt_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}_fold{fold}.pt")
+            pt_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}", f"{cfg.model.name}_fold{fold}.pt")
             torch.save(best_model.state_dict(), pt_path)
 
             artifact = wandb.Artifact(name = f"{cfg.model.name}_fold{fold}", type="model")
