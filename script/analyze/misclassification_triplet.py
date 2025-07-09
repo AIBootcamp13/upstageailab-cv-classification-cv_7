@@ -14,7 +14,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-from src.dataset.datamodule import DocumentDataModule
+from src.dataset.datamodule_triplet import DocumentDataModule
 from torch.utils.data import DataLoader
 from src.utils.pil import pil_to_base64, tensor_to_thumbnail_base64
 
@@ -57,7 +57,7 @@ def main(cfg):
   
 
   df = pd.DataFrame(pred_list)
-  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_normal.csv"), index=False)
+  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet.csv"), index=False)
   
 
 if __name__ == "__main__":

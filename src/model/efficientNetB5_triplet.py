@@ -19,7 +19,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-class EfficientNetB5OCRClassifier(pl.LightningModule):
+class EfficientNetB5TripletClassifier(pl.LightningModule):
     def __init__(self, num_classes: int = 17, lr: float = 1e-3, weight_decay: float = 1e-2, name: str = "efficientnetb5"):
         super().__init__()
         self.save_hyperparameters()
@@ -27,6 +27,7 @@ class EfficientNetB5OCRClassifier(pl.LightningModule):
         self.lr = lr
         self.weight_decay = weight_decay
         self.name = name
+        self.embedding_dim = 128
 
         #모델 초기화 및 헤드 변경
         self.model = timm.create_model("efficientnet_b5", pretrained=True)
@@ -40,6 +41,14 @@ class EfficientNetB5OCRClassifier(pl.LightningModule):
         # for param in self.model.classifier.parameters():
         #   param.requires_grad = True
         
+        # ✅ projection head 추가 (Triplet 용)
+        self.embedding_head = nn.Sequential(
+            nn.Linear(self.model.classifier.in_features, self.embedding_dim),
+            nn.BatchNorm1d(self.embedding_dim),
+            nn.ReLU(),
+            nn.Linear(self.embedding_dim, self.embedding_dim),
+        )
+
         for name, param in self.model.named_parameters():
           if (
               'blocks.5' in name              # 첫 번째 MBConv 블록
@@ -57,21 +66,36 @@ class EfficientNetB5OCRClassifier(pl.LightningModule):
     def forward(self, x):
         return self.model(x)
 
+    def extract_embedding(self, x):
+        # EfficientNet forward 중 feature까지 추출
+        feats = self.model.forward_features(x)  # (B, C, H, W)
+        pooled = F.adaptive_avg_pool2d(feats, (1,1)).squeeze(-1).squeeze(-1)  # (B, C)
+        emb = self.embedding_head(pooled)  # (B, embedding_dim)
+        emb = F.normalize(emb, dim=1)  # L2 정규화
+        return emb
+
     def training_step(self, batch, batch_idx):
-        x, y = batch
-        logits = self(x)
-        loss = F.cross_entropy(logits, y)
-        acc = (logits.argmax(dim=1) == y).float().mean()
-        preds = logits.argmax(dim=1)
+        if batch["ce"] is not None:
+            x, y = batch["ce"]
+            logits = self(x)
+            loss = F.cross_entropy(logits, y)
+            acc = (logits.argmax(dim=1) == y).float().mean()
+            preds = logits.argmax(dim=1)
+             #F1 누적
+            self.train_f1.update(preds, y)
 
+            self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True)
+            self.log("train/acc", acc, prog_bar=True, on_step=True, on_epoch=True)
+            return loss
 
-        #F1 누적
-        self.train_f1.update(preds, y)
-
-        self.log("train/loss", loss, prog_bar=True, on_step=True, on_epoch=True)
-        self.log("train/acc", acc, prog_bar=True, on_step=True, on_epoch=True)
-
-        return loss
+        elif batch["triplet"] is not None:
+            x1, x2, x3 = batch["triplet"]
+            all_x = torch.cat([x1, x2, x3], dim=0)
+            emb = self.extract_embedding(all_x)
+            a, p, n = emb[0::3], emb[1::3], emb[2::3]
+            triplet_loss = F.triplet_margin_loss(a, p, n, margin=1.25)
+            self.log("train/triplet_loss", triplet_loss)
+            return 0.5 * triplet_loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -141,6 +165,7 @@ def main(cfg):
     with torch.no_grad():
         out = model(x)
         print(out.shape)
+    print(model.forward_features(x))
 
 if __name__ == "__main__":
     main()

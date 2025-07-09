@@ -40,7 +40,7 @@ class OCRModule:
         pil_imgs = [self.tensor_to_pil(image_tensor) for image_tensor in image_tensors]
         np_imgs = [np.array(pil_img) for pil_img in pil_imgs]
 
-        result = self.ocr.predict(np_imgs)
+        result = self.ocr.predict(np_imgs, use_doc_orientation_classify=True, use_doc_unwarping=True, use_textline_orientation=True)
         if result is None or len(result[0]) == 0:
             return ""
 

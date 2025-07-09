@@ -5,7 +5,7 @@ from PIL import Image
 from torchvision.transforms.functional import to_pil_image
 import torch
 
-def denormalize(tensor, mean, std):
+def denormalize(tensor, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
     """
     Input:
       tensor: shape [C, H, W], normalized
