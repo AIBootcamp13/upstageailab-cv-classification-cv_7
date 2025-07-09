@@ -21,7 +21,8 @@ class TestDataset(Dataset):
         image = np.array(image)
 
         if self.transform:
-            image = self.transform(image=image)
-            image = image['image'] #(C,H,W) tensor 포맷
+            for transform in self.transform:
+                image = transform(image=image)
+                image = image['image'] #(C,H,W) tensor 포맷
 
         return image, img_name  # label 없음

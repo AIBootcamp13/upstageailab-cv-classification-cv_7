@@ -25,7 +25,7 @@ def test(cfg):
         dm.setup("predict")
 
         # 모델 로딩
-        model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}_fold{fold}.pt")
+        model_path = os.path.join(ROOT_DIR, "artifacts", cfg.model.name, f"{cfg.model.name}_fold{fold}.pt")
         model = instantiate(cfg.model)
         model.load_state_dict(torch.load(model_path, map_location="cpu"))
         model.eval()
