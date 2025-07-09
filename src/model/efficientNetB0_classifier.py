@@ -20,11 +20,12 @@ if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
 class EfficientNetB0Classifier(pl.LightningModule):
-    def __init__(self, num_classes: int = 17, lr: float = 1e-3, name: str = "efficientnetb0"):
+    def __init__(self, num_classes: int = 17, lr: float = 1e-3, weight_decay: float = 1e-2, name: str = "efficientnetb0"):
         super().__init__()
         self.save_hyperparameters()
         self.num_classes = num_classes
         self.lr = lr
+        self.weight_decay = weight_decay
         self.name = name
 
         #모델 초기화 및 헤드 변경
@@ -103,7 +104,14 @@ class EfficientNetB0Classifier(pl.LightningModule):
         return {"img_name": img_name, "pred": preds, "logits": logits}
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        scheduler = {
+          "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=2, factor=0.5, verbose=True),
+          "monitor": "val/f1",
+          "frequency": 1,
+          "interval": "epoch",
+        }
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}
 
 def print_module_tree(model, indent=0):
     for name, module in model.named_children():

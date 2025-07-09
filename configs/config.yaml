@@ -1,5 +1,5 @@
 defaults:
-  - model: efficientnetb0
+  - model: efficientnetb5
   - data: document_kfold
   - train: default
   - wandb: wandb
