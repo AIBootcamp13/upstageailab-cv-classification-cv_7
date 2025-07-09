@@ -1,7 +1,7 @@
 defaults:
-  - model: swin
-  - data: document_kfold
-  - train: default
+  - model: resnet18_sangho
+  - data: document
+  - train@train_cfg: default
   - wandb: wandb
 
 project_name: document-classification

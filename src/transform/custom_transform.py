@@ -82,3 +82,19 @@ def get_transform_shadow(image_size=(224, 224), image_normalization={"mean": [0.
       A.Normalize(mean=image_normalization["mean"], std=image_normalization["std"]),
       ToTensorV2()
   ])
+
+# 나중에 도입해보기
+"""
+def get_transform_custom(image_size=(224, 224), image_normalization={"mean": [...], "std": [...]}):
+    return A.Compose([
+        A.RandomBrightnessContrast(p=0.5),
+        A.Rotate(limit=120, p=0.5),
+        A.GaussNoise(var_limit=(10.0, 30.0), p=0.4),
+        A.MotionBlur(blur_limit=(3, 7), p=0.4),
+        A.RandomShadow(p=0.4),
+        A.ImageCompression(quality_lower=30, quality_upper=70, p=0.3),
+        A.Resize(image_size[0], image_size[1]),
+        A.Normalize(mean=image_normalization["mean"], std=image_normalization["std"]),
+        ToTensorV2()
+    ])
+"""

@@ -18,6 +18,7 @@ from src.dataset.dataset import DocumentDataset
 from src.dataset.testdataset import TestDataset
 from src.transform.custom_transform_ratio import get_augraphy_transform, get_transform_brightness, get_transform_coarse_dropout, get_transform_img_comp, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow, get_transform_norm_tensor
 # from src.transform.custom_transform import get_augraphy_transform, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow, get_test_transform
+# from src.transform.custom_transform import get_transform_custom
 
 class DocumentDataModule(pl.LightningDataModule):
     def __init__(self, 
@@ -25,6 +26,7 @@ class DocumentDataModule(pl.LightningDataModule):
     batch_size=32, 
     num_workers=4, 
     persistent_workers=True,
+    pin_memory=False,
     val_split=0.2, 
     image_size=(224, 224), 
     image_normalization={"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}, 
@@ -34,6 +36,7 @@ class DocumentDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.persistent_workers = persistent_workers
+        self.pin_memory = pin_memory
         self.val_split = val_split
         self.image_size = image_size
         self.image_normalization = image_normalization
@@ -68,6 +71,10 @@ class DocumentDataModule(pl.LightningDataModule):
         #coarse dropout + 회전
         self.transform_coarse_dropout = [get_transform_coarse_dropout(num_holes_range=[1, 2], hole_height_range=[0.1, 0.2], hole_width_range=[0.1, 0.12], fill=0, p=self.apply_transform_prob), get_transform_rotation(p=self.apply_transform_prob), get_transform_norm_tensor(image_size=self.image_size, image_normalization=self.image_normalization)]
 
+        """
+        self.transform_custom = [get_transform_custom(image_size=self.image_size, image_normalization=self.image_normalization)]
+        """
+
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
@@ -88,6 +95,7 @@ class DocumentDataModule(pl.LightningDataModule):
             self.train_dataset_brightness = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_brightness)
             self.train_dataset_img_comp = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_img_comp)
             self.train_dataset_coarse_dropout = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_coarse_dropout)
+            # self.train_dataset_custom = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_custom)
             self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise, self.train_dataset_blur, self.train_dataset_shadow, self.train_dataset_brightness, self.train_dataset_img_comp, self.train_dataset_coarse_dropout])
             
             self.val_dataset_no_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=None, transform=self.transform_rotation)
@@ -117,17 +125,17 @@ class DocumentDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         if self.train_dataset is None:
             raise ValueError("train_dataset is not initialized")
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, persistent_workers=self.persistent_workers)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, persistent_workers=self.persistent_workers, pin_memory=self.pin_memory)
 
     def val_dataloader(self):
         if self.val_dataset is None:
             raise ValueError("val_dataset is not initialized")
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers, persistent_workers=self.persistent_workers)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers, persistent_workers=self.persistent_workers, pin_memory=self.pin_memory)
     
     def predict_dataloader(self):
         if self.test_dataset is None:
             raise ValueError("test_dataset is not initialized")
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers, pin_memory=self.pin_memory)
 
 @hydra.main(config_path="../../configs", config_name="config")
 def main(cfg: DictConfig):

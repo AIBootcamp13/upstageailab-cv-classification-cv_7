@@ -1,4 +1,0 @@
-_target_: src.model.timm_model.TimmClassifier
-name: swin_tiny_patch4_window7_224
-num_classes: 17
-lr: 1e-3

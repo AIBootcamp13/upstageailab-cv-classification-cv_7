@@ -10,6 +10,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
+from omegaconf import OmegaConf
 from pytorch_lightning import Trainer
 from hydra.utils import instantiate
 from src.dataset.datamodule import DocumentDataModule
@@ -22,14 +23,20 @@ def test(cfg):
     # artifact = run.use_artifact("your-username/resnet-model:v0", type="model")
     # artifact_dir = artifact.download()
 
-    dm = DocumentDataModule(**cfg.data)
+    # dm = DocumentDataModule(**cfg.data)
+    data_args = OmegaConf.to_container(cfg.data, resolve=True)
+    data_args = {k: v for k, v in data_args.items() if k in [
+    "data_dir", "batch_size", "num_workers", "persistent_workers", "pin_memory", 
+    "val_split", "image_size", "image_normalization", "apply_transform_prob"
+    ]}
+    dm = DocumentDataModule(**data_args)
     dm.setup("predict")
 
     model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}", f"{cfg.model.name}.pt")
     model = instantiate(cfg.model)
     model.load_state_dict(torch.load(model_path))
 
-    trainer = Trainer(**cfg.train)
+    trainer = Trainer()
     predictions = trainer.predict(model, datamodule=dm)
 
     all_img_names = []

@@ -7,18 +7,21 @@ import timm
 from torchmetrics.classification import F1Score
 
 class TimmClassifier(pl.LightningModule):
-    def __init__(self, name: str, num_classes: int = 17, lr: float = 1e-3):
+    def __init__(self, name: str, num_classes: int = 17, lr: float = 1e-3, weight_decay = 1e-4, dropout = 0.3):
         super().__init__()
         self.save_hyperparameters()
 
         self.model_name = name
         self.num_classes = num_classes
         self.lr = lr
+        self.weight_decay = weight_decay
+        self.dropout = dropout
 
         self.model = timm.create_model(
             name,
             pretrained=True,
-            num_classes=num_classes
+            num_classes=num_classes,
+            drop_rate=self.dropout
         )
 
         self.train_f1 = F1Score(task="multiclass", num_classes=num_classes, average="macro")
@@ -70,4 +73,8 @@ class TimmClassifier(pl.LightningModule):
         return {"img_name": img_name, "pred": preds, "logits": logits}
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr)
+        return torch.optim.Adam(
+            self.parameters(),
+            lr=self.lr,
+            weight_decay=self.weight_decay
+        )

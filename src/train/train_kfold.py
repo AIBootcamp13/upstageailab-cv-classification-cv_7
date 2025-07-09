@@ -42,8 +42,6 @@ def train(cfg):
 
     for fold in range(cfg.data.num_folds):
         start_time = time.time()
-
-        wandb.init(mode="offline") # 추후 제거!!!!
         
         wandb_logger = WandbLogger(
             project=cfg.wandb.project,
