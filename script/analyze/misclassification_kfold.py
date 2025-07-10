@@ -14,7 +14,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-from src.dataset.datamodule_kfold import DocumentDataModule
+from src.dataset.datamodule_triplet_kfold import DocumentDataModule
 from torch.utils.data import DataLoader
 from src.utils.pil import pil_to_base64, tensor_to_thumbnail_base64
 
@@ -65,7 +65,7 @@ def main(cfg):
         recoder.append({"fold": fold, "img_name": img_name, "pred": pred, "label": label, "img": img})
 
   df = pd.DataFrame(recoder)
-  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_kfold.csv"), index=False)
+  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet_kfold.csv"), index=False)
   
 
 if __name__ == "__main__":

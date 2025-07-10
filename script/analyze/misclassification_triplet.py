@@ -57,7 +57,7 @@ def main(cfg):
   
 
   df = pd.DataFrame(pred_list)
-  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet.csv"), index=False)
+  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet1_25.csv"), index=False)
   
 
 if __name__ == "__main__":

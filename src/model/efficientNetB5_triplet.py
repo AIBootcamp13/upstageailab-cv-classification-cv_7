@@ -94,7 +94,7 @@ class EfficientNetB5TripletClassifier(pl.LightningModule):
             emb = self.extract_embedding(all_x)
             a, p, n = emb[0::3], emb[1::3], emb[2::3]
             triplet_loss = F.triplet_margin_loss(a, p, n, margin=1.25)
-            self.log("train/triplet_loss", triplet_loss)
+            self.log("train/triplet_loss", triplet_loss, prog_bar=True, on_epoch=True)
             return 0.5 * triplet_loss
 
     def validation_step(self, batch, batch_idx):
@@ -142,7 +142,7 @@ class EfficientNetB5TripletClassifier(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         scheduler = {
-          "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=1, factor=0.5, verbose=True),
+          "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=1, factor=0.5, verbose=True, min_lr=1e-6),
           "monitor": "val/f1",
           "frequency": 1,
           "interval": "epoch",

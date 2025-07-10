@@ -1,6 +1,6 @@
 defaults:
   - model: efficientnetb5_triplet
-  - data: document
+  - data: document_kfold
   - train: default
   - wandb: wandb
 
