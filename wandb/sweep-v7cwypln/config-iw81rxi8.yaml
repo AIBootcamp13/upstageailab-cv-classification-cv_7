@@ -1,0 +1,16 @@
+wandb_version: 1
+
+model.batch_size:
+  value: 16
+model.dropout:
+  value: 0.2
+model.image_size:
+  value:
+  - 224
+  - 224
+model.lr:
+  value: 0.003153386690433525
+model.name:
+  value: resnet18
+model.weight_decay:
+  value: 1.0e-05

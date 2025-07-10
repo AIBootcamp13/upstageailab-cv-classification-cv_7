@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import hydra
 import os
 import sys
@@ -7,6 +9,7 @@ import time
 
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 # 현재 파일 기준으로 프로젝트 루트 경로 찾기
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
@@ -21,6 +24,16 @@ from src.dataset.datamodule import DocumentDataModule
 @hydra.main(config_path="../../configs", config_name="config")
 def train(cfg):
     wandb.login()
+    run = wandb.init()
+    sweep_cfg = wandb.config
+
+    # Sweep에서 전달된 값을 수동 반영
+    cfg.model.lr = sweep_cfg["model.lr"]
+    cfg.model.weight_decay = sweep_cfg["model.weight_decay"]
+    cfg.model.dropout = sweep_cfg["model.dropout"]
+    cfg.data.batch_size = sweep_cfg["data.batch_size"]
+    cfg.data.image_size = sweep_cfg["data.image_size"]
+        
     # 모델 저장 패스 생성
     if not os.path.exists(os.path.join(ROOT_DIR, "artifacts")):
         os.makedirs(os.path.join(ROOT_DIR, "artifacts"))
@@ -40,7 +53,7 @@ def train(cfg):
     early_stop_callback = EarlyStopping(
         monitor="val/f1",   # 기준 지표 (v alidation loss 또는 val_acc 등)
         mode="max",          
-        patience=4,           # 성능이 개선되지 않는 epoch 수
+        patience=3,           # 성능이 개선되지 않는 epoch 수
         verbose=True
     )
 
@@ -54,9 +67,13 @@ def train(cfg):
         filename=f"{cfg.model.name}"
     )
 
-    dm = DocumentDataModule(**cfg.data)
+    valid_data_keys = {"batch_size", "image_size"}
+    data_args = {k: v for k, v in OmegaConf.to_container(cfg.data, resolve=True).items() if k in valid_data_keys}
+    dm = DocumentDataModule(**data_args)
+    print(cfg.data)
     model = instantiate(cfg.model)
-    trainer = Trainer(**cfg.train, callbacks=[early_stop_callback, checkpoint_callback], logger=wandb_logger)
+    trainer = instantiate(cfg.train_cfg, callbacks=[early_stop_callback, checkpoint_callback], logger=wandb_logger)
+    torch.cuda.empty_cache() # 메모리 수동 비우기, OOM 방지용
     trainer.fit(model, datamodule=dm)
    
     

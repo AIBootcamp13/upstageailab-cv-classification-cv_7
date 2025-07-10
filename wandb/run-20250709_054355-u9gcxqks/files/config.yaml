@@ -1,0 +1,97 @@
+_wandb:
+    value:
+        cli_version: 0.21.0
+        e:
+            uiiyax8ucui2gmafi5l69xb2tyixatl9:
+                args:
+                    - data.batch_size=32
+                    - data.image_size=[384, 384]
+                    - model.dropout=0.2
+                    - model.lr=0.0017982261523735623
+                    - model.name=resnet18
+                    - model.weight_decay=0
+                codePath: src/train/train.py
+                codePathLocal: src/train/train.py
+                cpu_count: 32
+                cpu_count_logical: 64
+                cudaVersion: "12.2"
+                disk:
+                    /:
+                        total: "1964618686464"
+                        used: "149462384640"
+                email: jslkap227@gmail.com
+                executable: /opt/conda/bin/python
+                git:
+                    commit: 5b430ebccba1aabe188dc222a68a407be1358b4f
+                    remote: git@github.com:AIBootcamp13/upstageailab-cv-classification-cv_7.git
+                gpu: NVIDIA GeForce RTX 3090
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 10496
+                      memoryTotal: "25769803776"
+                      name: NVIDIA GeForce RTX 3090
+                      uuid: GPU-76606eb2-b917-02b5-40cd-eced9752e25b
+                host: instance-15551
+                memory:
+                    total: "270133542912"
+                os: Linux-5.4.0-167-generic-x86_64-with-glibc2.31
+                program: /data/ephemeral/home/upstageailab-cv-classification-cv_7/src/train/train.py
+                python: CPython 3.10.13
+                root: /data/ephemeral/home/upstageailab-cv-classification-cv_7
+                startedAt: "2025-07-08T20:43:55.023443Z"
+                writerId: uiiyax8ucui2gmafi5l69xb2tyixatl9
+        m: []
+        python_version: 3.10.13
+        t:
+            "1":
+                - 1
+                - 5
+                - 9
+                - 49
+                - 50
+                - 53
+                - 80
+                - 103
+            "2":
+                - 1
+                - 5
+                - 9
+                - 41
+                - 49
+                - 50
+                - 53
+                - 63
+                - 80
+                - 103
+            "3":
+                - 2
+                - 14
+            "4": 3.10.13
+            "5": 0.21.0
+            "12": 0.21.0
+            "13": linux-x86_64
+data.batch_size:
+    value: 32
+data.image_size:
+    value:
+        - 384
+        - 384
+dropout:
+    value: 0.2
+lr:
+    value: 0.0017982261523735623
+model.dropout:
+    value: 0.2
+model.lr:
+    value: 0.0017982261523735623
+model.name:
+    value: resnet18
+model.weight_decay:
+    value: 0
+name:
+    value: resnet18
+num_classes:
+    value: 17
+weight_decay:
+    value: 0

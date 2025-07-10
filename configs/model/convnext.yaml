@@ -1,0 +1,4 @@
+_target_: src.model.timm_model.TimmClassifier
+model_name: convnext_tiny
+num_classes: 17
+lr: 1e-3
