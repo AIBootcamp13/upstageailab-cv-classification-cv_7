@@ -1,7 +1,7 @@
 # Document Type Classification | 문서 타입 분류
 ## Team 7조 | 남녀노소
 
-| ![홍상호](https://avatars.githubusercontent.com/u/156163982?v=4) | ![김정빈](https://avatars.githubusercontent.com/u/156163982?v=4) | ![소제목](https://avatars.githubusercontent.com/u/156163982?v=4) | ![박성진](https://avatars.githubusercontent.com/u/156163982?v=4)) | ![고민주](https://avatars.githubusercontent.com/u/156163982?v=4) |
+| ![홍상호](https://avatars.githubusercontent.com/u/156163982?v=4) | ![김정빈](https://avatars.githubusercontent.com/u/156163982?v=4) | ![소제목](https://avatars.githubusercontent.com/u/156163982?v=4) | ![박성진](https://avatars.githubusercontent.com/u/156163982?v=4) | ![고민주](https://avatars.githubusercontent.com/u/156163982?v=4) |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
 |            [홍상호](https://github.com/UpstageAILab)             |            [김정빈](https://github.com/UpstageAILab)             |            [소제목](https://github.com/UpstageAILab)             |            [박성진](https://github.com/UpstageAILab)              |            [고민주](https://github.com/UpstageAILab)             |
 |                            팀장, 담당 역할                             |                            팀원                             |                            팀원                             |                            팀원                             |                            팀원                             |
