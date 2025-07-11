@@ -167,7 +167,11 @@ upstageailab-cv-classification-cv_7/
 ### Leader Board
 
 - _Insert Leader Board Capture_
+- <img width="1040" height="808" alt="image" src="https://github.com/user-attachments/assets/949e5898-c41e-47a0-91a5-d9f16be1a6d5" />
+
 - _Write rank and score_
+- <img width="1015" height="383" alt="image" src="https://github.com/user-attachments/assets/23f9619f-1533-4677-9994-fc84d23bca63" />
+
 
 ### Presentation
 
