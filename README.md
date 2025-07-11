@@ -142,20 +142,6 @@ upstageailab-cv-classification-cv_7/
 - 이미지 크기 및 품질 편차 확인
 - 틀린 케이스 패턴 분석
 
-## 클래스 불균형 분석 보고서
-
-### 분석
-- 문서 데이터의 클래스 분포를 분석하여 클래스 간 불균형이 존재하는지 확인
-
-### 결과
-- 전체 문서 중 `임신 진료비 지급 신청서` 및 `소견서` 문서가 약 **50개 정도**로, 다른 문서 클래스에 비해 **상대적으로 개수가 적음**을 확인
-
-### 의견 도출
-- 데이터 증강을 통해 충분히 데이터를 확보한다면 불균형에 따른 모델 성능 감소는 많이 완화될 것으로 보고 일단 진행
-
-
-
-
 
 ### Data Processing
 
@@ -204,3 +190,5 @@ upstageailab-cv-classification-cv_7/
 - [Weights & Biases](https://docs.wandb.ai/)
 - [albumentations](https://albumentations.ai/docs/)
 - [augraphy](https://augraphy.com/)
+- [프로젝트 발표 자료](https://docs.google.com/presentation/d/1dj_4yDZeUex89qat1wzjUi1n5G0Ajmrv/edit?slide=id.g36dabdc4904_0_152#slide=id.g36dabdc4904_0_152)
+- [7조 노션](https://www.notion.so/7-21140cb3731d80028eafddf88e9cdb17?source=copy_link)
