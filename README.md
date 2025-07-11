@@ -3,7 +3,7 @@
 
 | ![홍상호](https://avatars.githubusercontent.com/u/156163982?v=4) | ![김정빈](https://avatars.githubusercontent.com/u/156163982?v=4) | ![소제목](https://avatars.githubusercontent.com/u/156163982?v=4) | ![박성진](https://avatars.githubusercontent.com/u/204808507?v=4) | ![고민주](https://avatars.githubusercontent.com/u/156163982?v=4) |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
-|            [홍상호](https://github.com/UpstageAILab)             |            [김정빈](https://github.com/UpstageAILab)             |            [소제목](https://github.com/UpstageAILab)             |            [박성진](https://github.com/psj2024p)              |            [고민주](https://github.com/UpstageAILab)             |
+|            [홍상호](https://github.com/UpstageAILab)             |            [김정빈](https://github.com/UpstageAILab)             |            [소제목](https://github.com/UpstageAILab)             |            [박성진](https://github.com/UpstageAILab)              |            [고민주](https://github.com/UpstageAILab)             |
 |                            팀장, 담당 역할                             |                            팀원                             |                            팀원                             |                            팀원                             |                            팀원                             |
 
 ## 0. Overview
@@ -176,6 +176,7 @@ upstageailab-cv-classification-cv_7/
 ### Presentation
 
 - _Insert your presentaion file(pdf) link_
+- https://docs.google.com/presentation/d/1dj_4yDZeUex89qat1wzjUi1n5G0Ajmrv/edit?slide=id.g36dabdc4904_0_152#slide=id.g36dabdc4904_0_152
 
 ## etc
 
