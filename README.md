@@ -86,8 +86,8 @@
 
 ### Directory
 ```
-cv-document-classification/
-├── config/
+upstageailab-cv-classification-cv_7/
+├── .github/
 │   └── model_configs/
 ├── data/
 │   ├── raw/
@@ -107,6 +107,37 @@ cv-document-classification/
 │   ├── predictions/
 │   └── submissions/
 └── docs/
+
+upstageailab-cv-classification-cv_7/
+├──── .github/
+├──── artifacts/
+├──── configs/
+│  ├──── data/
+│  │   ├──── document_kfold.yaml/
+│  │   └──── ...
+│  ├──── model/
+│  │   ├──── dinov2.yaml/
+│  │   ├──── efficientnetb5.yaml/
+│  │   └──── ...
+│  ├──── train/
+│  │   └──── default.yaml
+│  ├──── wandb/
+│  │   └──── wandb.yaml
+│  └──── config.yaml
+├──── data/
+├──── Notebook/
+├──── outputs/
+├──── src/
+│  ├──── dataset/
+│  ├──── ensemble/
+│  ├──── model/
+│  ├──── test/
+│  ├──── train/
+│  ├──── transform/
+│  └──── utils/
+├──── main.py/
+├──── requirements2.txt
+└──── csv outputs/
 
 ```
 
