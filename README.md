@@ -3,7 +3,7 @@
 
 | ![홍상호](https://avatars.githubusercontent.com/u/156163982?v=4) | ![김정빈](https://avatars.githubusercontent.com/u/156163982?v=4) | ![소제목](https://avatars.githubusercontent.com/u/156163982?v=4) | ![박성진](https://avatars.githubusercontent.com/u/156163982?v=4) | ![고민주](https://avatars.githubusercontent.com/u/156163982?v=4) |
 | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: | :--------------------------------------------------------------: |
-|            [홍상호](https://github.com/UpstageAILab)             |            [김정빈](https://github.com/UpstageAILab)             |            [소제목](https://github.com/UpstageAILab)             |            [박성진](https://github.com/psj2024p)              |            [고민주](https://github.com/UpstageAILab)             |
+|            [홍상호](https://github.com/UpstageAILab)             |            [김정빈](https://github.com/UpstageAILab)             |            [소재목](https://github.com/UpstageAILab)             |            [박성진](https://github.com/psj2024p)              |            [고민주](https://github.com/UpstageAILab)             |
 |                            팀장                             |                            팀원 </br>Wandb, hydra 환경구축 </br>모델 학습 파이프라이닝 </br>모델실험                             |                            팀원                             |                            팀원                             |                            팀원                             |
 
 ## 0. Overview
