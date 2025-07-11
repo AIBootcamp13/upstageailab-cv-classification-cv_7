@@ -15,7 +15,14 @@
 
 
 ### Requirements
-- _Write Requirements_
+* Python 3.10+
+* pytorch-lightning==2.0.2
+* torchvision==0.15.2
+* timm==0.9.2
+* albumentations==1.3.0
+* augraphy==8.0.0
+* hydra-core==1.3.2
+* wandb==0.15.12
 
 ## 1. Competiton Info
 
@@ -145,17 +152,25 @@ upstageailab-cv-classification-cv_7/
 
 ### Data Processing
 
-- _Describe data processing process (e.g. Data Labeling, Data Cleaning..)_
+- Augraphy, albumentations 활용하여 custom augmentation 적용
+- 확률적 로테이션 적용하여 회전 강건 학습
+- Cutmix 기법 활용
 
 ## 4. Modeling
 
 ### Model descrition
 
-- _Write model information and why your select this model_
+* **ResNet18 / ResNet50**: 가장 기본적인 CNN 기반 분류기로써 baseline 성능 측정용
+* **EfficientNetB0 / B5**: 파라미터 수 대비 높은 정확도를 자랑하며 실험 효율성이 높음
+* **Swin Transformer**: Transformer 기반으로 전역 정보 추출에 강점
+* **DINOv2 (ViT 기반)**: Self-Supervised 학습으로 사전학습된 backbone 사용
 
 ### Modeling Process
 
-- _Write model train and test process with capture_
+* Train/Validation split: Stratified K-Fold (n=5)
+* CE Loss + Triplet Loss 기반 학습
+* Pytorch Lightning 기반으로 재사용 가능한 Module 구성
+* 주요 실험에는 WandB + Hydra 활용하여 실험 기록
 
 ## 5. Result
 
