@@ -8,7 +8,11 @@
 
 ## 0. Overview
 ### Environment
-- _Write Development environment_
+- 코드 버전 관리: GitHub를 활용한 코드 관리 및 협업
+- 실험 관리: Weights & Biases(WandB) + Hydra를 통한 실험 트래킹
+- 필수 패키지 설치: PyTorch Lightning, Albumentations, Augraphy 등 환경 세팅
+- 재현성 확보: requirements.txt, requirements2.txt 관리
+
 
 ### Requirements
 - _Write Requirements_
