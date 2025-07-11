@@ -48,10 +48,9 @@
 
 &nbsp;&nbsp; - **AM**: EDA (클래스 분포, 이미지 특성 분석)<br>
 &nbsp;&nbsp; - **PM**: 데이터 전처리 파이프라인, 데이터로더 구현<br>
-&nbsp;&nbsp; - **Goal**: 데이터 증강, 데이터 이해 완료
+&nbsp;&nbsp; - **Goal**: 데이터 증강, 데이터 이해 완료<br>
 
-
-## 📅 Week 2 (7/7~7/11)
+- ### 📅 Week 2 (7/7~7/11)
 
 #### **Day 4 (7/7, 월)** - EDA 합치기, Validation set 구축
 
