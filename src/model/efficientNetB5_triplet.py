@@ -13,6 +13,8 @@ import os
 import sys
 
 from torchmetrics.classification import F1Score
+from pytorch_metric_learning.miners import TripletMarginMiner
+from pytorch_metric_learning.losses import TripletMarginLoss
 
 # 현재 파일 기준으로 프로젝트 루트 경로 찾기
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
@@ -28,6 +30,8 @@ class EfficientNetB5TripletClassifier(pl.LightningModule):
         self.weight_decay = weight_decay
         self.name = name
         self.embedding_dim = 128
+        self.triplet_loss = TripletMarginLoss(margin=1.25)
+        self.triplet_miner = TripletMarginMiner(type_of_triplets="semihard", margin=1.25)
 
         #모델 초기화 및 헤드 변경
         self.model = timm.create_model("efficientnet_b5", pretrained=True)
@@ -89,11 +93,16 @@ class EfficientNetB5TripletClassifier(pl.LightningModule):
             return loss
 
         elif batch["triplet"] is not None:
-            x1, x2, x3 = batch["triplet"]
-            all_x = torch.cat([x1, x2, x3], dim=0)
-            emb = self.extract_embedding(all_x)
-            a, p, n = emb[0::3], emb[1::3], emb[2::3]
-            triplet_loss = F.triplet_margin_loss(a, p, n, margin=1.25)
+            # x1, x2, x3 = batch["triplet"]
+            # all_x = torch.cat([x1, x2, x3], dim=0)
+            # emb = self.extract_embedding(all_x)
+            # a, p, n = emb[0::3], emb[1::3], emb[2::3]
+            # triplet_loss = F.triplet_margin_loss(a, p, n, margin=1.25)
+            # self.log("train/triplet_loss", triplet_loss, prog_bar=True, on_epoch=True)
+            x, y = batch["triplet"]
+            emb = self.extract_embedding(x)
+            triplet_idx = self.miner(emb, y)
+            triplet_loss = self.triplet_loss(emb, y, triplet_idx)
             self.log("train/triplet_loss", triplet_loss, prog_bar=True, on_epoch=True)
             return 0.5 * triplet_loss
 

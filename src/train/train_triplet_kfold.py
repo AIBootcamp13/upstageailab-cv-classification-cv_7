@@ -38,7 +38,7 @@ def train(cfg):
         df = make_stratified_kfold(pd.read_csv(f"{ROOT_DIR}/data/train.csv"), n_splits=cfg.data.num_folds, seed=42)
         df.to_csv(cfg.data.fold_path, index=False)
 
-    for fold in range(1, cfg.data.num_folds):
+    for fold in range(cfg.data.num_folds):
         start_time = time.time()
 
         wandb_logger = WandbLogger(

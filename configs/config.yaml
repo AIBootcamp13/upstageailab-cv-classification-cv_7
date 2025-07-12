@@ -7,8 +7,8 @@ defaults:
 project_name: document-classification
 seed: 42
 
-hydra:
-  run:
-    dir: ./outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
-  job:
-    chdir: False
+# hydra:
+#   run:
+#     dir: ./outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+#   job:
+#     chdir: False

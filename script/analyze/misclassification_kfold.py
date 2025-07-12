@@ -65,7 +65,7 @@ def main(cfg):
         recoder.append({"fold": fold, "img_name": img_name, "pred": pred, "label": label, "img": img})
 
   df = pd.DataFrame(recoder)
-  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet_kfold.csv"), index=False)
+  df.to_csv(os.path.join(ROOT_DIR, "data", "misclassification_triplet_kfold_best.csv"), index=False)
   
 
 if __name__ == "__main__":

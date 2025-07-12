@@ -19,7 +19,7 @@ if ROOT_DIR not in sys.path:
 from omegaconf import DictConfig
 from src.dataset.dataset import DocumentDataset
 from src.dataset.testdataset import TestDataset
-from src.dataset.triplet37dataset import Class3and7TripletDataset
+from src.dataset.triplet37dataset_2 import BalancedClass3and7Dataset
 from src.dataset.analyzedataset import AnalyzeDataset
 from src.transform.custom_transform_ratio import get_augraphy_transform, get_transform_brightness, get_transform_coarse_dropout, get_transform_img_comp, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow, get_transform_norm_tensor
 # from src.transform.custom_transform import get_augraphy_transform, get_transform_rotation, get_transform_gaussNoise, get_transform_blur, get_transform_shadow, get_test_transform
@@ -99,8 +99,10 @@ class DocumentDataModule(pl.LightningDataModule):
             self.train_dataset_img_comp = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_img_comp)
             self.train_dataset_coarse_dropout = DocumentDataset(train_df, self.data_dir, aug_pipeline=None, transform=self.transform_coarse_dropout)
             self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise, self.train_dataset_blur, self.train_dataset_shadow, self.train_dataset_brightness, self.train_dataset_img_comp, self.train_dataset_coarse_dropout])
-            self.triplet_dataset = Class3and7TripletDataset(self.train_dataset, target_classes=[3, 7])
+            self.triplet_dataset = BalancedClass3and7Dataset(self.train_dataset, target_classes=[3, 7])
             
+            self.cutmix = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise]) 
+
             self.val_dataset_no_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=None, transform=self.transform_rotation)
             self.val_dataset_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)
             self.val_dataset = torch.utils.data.ConcatDataset([self.val_dataset_no_augraphy, self.val_dataset_augraphy])
@@ -135,7 +137,7 @@ class DocumentDataModule(pl.LightningDataModule):
             raise ValueError("train_dataset or triplet_dataset is not initialized")
         return CombinedLoader({
           "ce": DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, persistent_workers=self.persistent_workers),
-          'triplet': DataLoader(self.triplet_dataset, batch_size=3*16, shuffle=True, num_workers=self.num_workers, drop_last=True, persistent_workers=self.persistent_workers)
+          'triplet': DataLoader(self.triplet_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, drop_last=True, persistent_workers=self.persistent_workers)
         }, mode="max_size_cycle")
         
     def val_dataloader(self):
@@ -157,6 +159,7 @@ class DocumentDataModule(pl.LightningDataModule):
 def main(cfg: DictConfig):
     dm = DocumentDataModule(**cfg.data)
     dm.setup()
+    
 
 if __name__ == "__main__":
     main()
