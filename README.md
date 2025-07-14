@@ -53,35 +53,35 @@
 
 #### **Day 3 (7/4, 금)** - EDA + 데이터 증강
 
-&nbsp;&nbsp; - **AM**: EDA (클래스 분포, 이미지 특성 분석)<br>
-&nbsp;&nbsp; - **PM**: 데이터 전처리 파이프라인, 데이터로더 구현<br>
-&nbsp;&nbsp; - **Goal**: 데이터 증강, 데이터 이해 완료<br>
+&emsp;&emsp; - **AM**: EDA (클래스 분포, 이미지 특성 분석)<br>
+&emsp;&emsp; - **PM**: 데이터 전처리 파이프라인, 데이터로더 구현<br>
+&emsp;&emsp; - **Goal**: 데이터 증강, 데이터 이해 완료<br>
 
 - ### 📅 Week 2 (7/7~7/11)
 
 #### **Day 4 (7/7, 월)** - EDA 합치기, Validation set 구축
 
-&nbsp;&nbsp; - **AM**: 틀린 케이스 분석, 하이퍼파라미터 튜닝<br>
-&nbsp;&nbsp; - **PM**: Albumentations 적용, 다른 모델 실험<br>
-&nbsp;&nbsp; - **Goal**: 성능 개선
+&emsp;&emsp; - **AM**: 틀린 케이스 분석, 하이퍼파라미터 튜닝<br>
+&emsp;&emsp; - **PM**: Albumentations 적용, 다른 모델 실험<br>
+&emsp;&emsp; - **Goal**: 성능 개선
 
 #### **Day 5 (7/8, 화)** - 2차 사이클 시작
 
-&nbsp;&nbsp; - **AM**: Augraphy 적용, 고급 데이터 증강<br>
-&nbsp;&nbsp; - **PM**: 개별 모델 여러 개 학습 (앙상블 준비)<br>
-&nbsp;&nbsp; - **Goal**: 다양한 모델 확보
+&emsp;&emsp; - **AM**: Augraphy 적용, 고급 데이터 증강<br>
+&emsp;&emsp; - **PM**: 개별 모델 여러 개 학습 (앙상블 준비)<br>
+&emsp;&emsp; - **Goal**: 다양한 모델 확보
 
 #### **Day 6 (7/9, 수)** - 3차 사이클 시작
 
-&nbsp;&nbsp; - **AM**: 모델 앙상블 구현<br>
-&nbsp;&nbsp; - **PM**: 앙상블 최적화, 2차 제출<br>
-&nbsp;&nbsp; - **Goal**: 앙상블 완료
+&emsp;&emsp; - **AM**: 모델 앙상블 구현<br>
+&emsp;&emsp; - **PM**: 앙상블 최적화, 2차 제출<br>
+&emsp;&emsp; - **Goal**: 앙상블 완료
 
 #### **Day 7 (7/10, 목)** - 마무리
 
-&nbsp;&nbsp; - **AM**: 최종 제출<br>
-&nbsp;&nbsp; - **PM**: 코드 정리, 프로젝트 회고<br>
-&nbsp;&nbsp; - **Goal**: 프로젝트 완료
+&emsp;&emsp; - **AM**: 최종 제출<br>
+&emsp;&emsp; - **PM**: 코드 정리, 프로젝트 회고<br>
+&emsp;&emsp; - **Goal**: 프로젝트 완료
 
 ## 2. Components
 
