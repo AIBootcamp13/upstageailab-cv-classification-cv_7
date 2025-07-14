@@ -42,7 +42,7 @@
   #### **Day 1 (7/2, 수)** - 환경 구축
 
 &emsp; - **AM**: 팀 킥오프, 대회 규칙 이해, 데이터셋 파악 <br>
-&nbsp;&nbsp; - **PM**: GitHub 저장소 생성, 디렉토리 구조 설계, WandB 설정<br>
+&emsp;&nbsp; - **PM**: GitHub 저장소 생성, 디렉토리 구조 설계, WandB 설정<br>
 &nbsp;&nbsp; - **Goal**: 개발환경 완료
 
 #### **Day 2 (7/3, 목)** - 베이스라인 분석 + EDA
