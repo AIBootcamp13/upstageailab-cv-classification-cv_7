@@ -41,15 +41,15 @@
 
   #### **Day 1 (7/2, 수)** - 환경 구축
 
-&emsp; - **AM**: 팀 킥오프, 대회 규칙 이해, 데이터셋 파악 <br>
-&emsp;&nbsp; - **PM**: GitHub 저장소 생성, 디렉토리 구조 설계, WandB 설정<br>
+&emsp;&emsp; - **AM**: 팀 킥오프, 대회 규칙 이해, 데이터셋 파악 <br>
+&emsp;&emsp; - **PM**: GitHub 저장소 생성, 디렉토리 구조 설계, WandB 설정<br>
 &emsp;&emsp; - **Goal**: 개발환경 완료
 
-#### **Day 2 (7/3, 목)** - 베이스라인 분석 + EDA
+  #### **Day 2 (7/3, 목)** - 베이스라인 분석 + EDA
 
-&nbsp;&nbsp; - **AM**: 베이스라인 모델 구현 (ResNet50)<br>
-&nbsp;&nbsp; - **PM**: 기본 학습, 첫 제출<br>
-&nbsp;&nbsp; - **Goal**: 베이스라인 완료
+&emsp;&emsp; - **AM**: 베이스라인 모델 구현 (ResNet50)<br>
+&emsp;&emsp; - **PM**: 기본 학습, 첫 제출<br>
+&emsp;&emsp; - **Goal**: 베이스라인 완료
 
 #### **Day 3 (7/4, 금)** - EDA + 데이터 증강
 
