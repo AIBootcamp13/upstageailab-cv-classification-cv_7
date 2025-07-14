@@ -45,7 +45,7 @@
 &emsp;&emsp; - **PM**: GitHub 저장소 생성, 디렉토리 구조 설계, WandB 설정<br>
 &emsp;&emsp; - **Goal**: 개발환경 완료
 
-  #### **Day 2 (7/3, 목)** - 베이스라인 분석 + EDA
+ #### **Day 2 (7/3, 목)** - 베이스라인 분석 + EDA
 
 &emsp;&emsp; - **AM**: 베이스라인 모델 구현 (ResNet50)<br>
 &emsp;&emsp; - **PM**: 기본 학습, 첫 제출<br>
