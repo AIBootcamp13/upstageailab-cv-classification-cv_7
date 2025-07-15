@@ -12,7 +12,7 @@ if ROOT_DIR not in sys.path:
 
 from pytorch_lightning import Trainer
 from hydra.utils import instantiate
-from src.dataset.datamodule import DocumentDataModule
+from src.dataset.datamodule_cutmix import DocumentDataModule
 
 @hydra.main(config_path="../../configs", config_name="config")
 def test(cfg):

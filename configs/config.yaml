@@ -1,8 +1,14 @@
 defaults:
-  - model: efficientnetb5
+  - model: efficientnetb5_triplet
   - data: document_kfold
   - train: default
   - wandb: wandb
 
 project_name: document-classification
 seed: 42
+
+# hydra:
+#   run:
+#     dir: ./outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+#   job:
+#     chdir: False

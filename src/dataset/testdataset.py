@@ -8,7 +8,11 @@ import numpy as np
 class TestDataset(Dataset):
     def __init__(self, data_dir, transform=None):
         self.data_dir = data_dir
-        self.image_list = os.listdir(os.path.join(self.data_dir, "test"))
+        test_dir = os.path.join(self.data_dir, "test")
+        self.image_list = sorted([
+            f for f in os.listdir(test_dir)
+            if os.path.isfile(os.path.join(test_dir, f)) and f.lower().endswith(('.jpg', '.jpeg', '.png'))
+        ])
         self.transform = transform
         
     def __len__(self):

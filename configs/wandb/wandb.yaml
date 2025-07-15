@@ -1,3 +1,4 @@
 project: document-classification
 entity: CV-7   # W&B 팀 이름 (없으면 생략 가능)
 run_name: ${model.name}-${now:%Y-%m-%d_%H-%M-%S}
+mode: offline
