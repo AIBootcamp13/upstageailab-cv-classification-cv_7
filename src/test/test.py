@@ -12,7 +12,7 @@ if ROOT_DIR not in sys.path:
 
 from pytorch_lightning import Trainer
 from hydra.utils import instantiate
-from src.dataset.datamodule import DocumentDataModule
+from src.dataset.datamodule_cutmix import DocumentDataModule
 
 @hydra.main(config_path="../../configs", config_name="config")
 def test(cfg):
@@ -25,7 +25,7 @@ def test(cfg):
     dm = DocumentDataModule(**cfg.data)
     dm.setup("predict")
 
-    model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}.pt")
+    model_path = os.path.join(ROOT_DIR, "artifacts", f"{cfg.model.name}", f"{cfg.model.name}.pt")
     model = instantiate(cfg.model)
     model.load_state_dict(torch.load(model_path))
 

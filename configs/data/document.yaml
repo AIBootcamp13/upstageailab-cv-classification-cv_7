@@ -1,6 +1,8 @@
 data_dir: ${hydra:runtime.cwd}/data
-batch_size: 64
-num_workers: 32
+batch_size: 32
+num_workers: 16
+persistent_workers: true
+pin_memory: true # GPU 데이터 전송 최적화됨 → 대부분의 경우 성능 ↑
 val_split: 0.2
 image_size: [224, 224]
 image_normalization:

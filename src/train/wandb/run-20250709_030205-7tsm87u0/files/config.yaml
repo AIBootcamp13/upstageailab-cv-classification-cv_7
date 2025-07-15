@@ -1,0 +1,136 @@
+_wandb:
+    value:
+        cli_version: 0.21.0
+        e:
+            h0o2b5asifkdq2ml1y3ppd7u91im6rd7:
+                codePath: src/train/train.py
+                codePathLocal: train.py
+                cpu_count: 32
+                cpu_count_logical: 64
+                cudaVersion: "12.2"
+                disk:
+                    /:
+                        total: "1964618686464"
+                        used: "148415320064"
+                email: jslkap227@gmail.com
+                executable: /opt/conda/bin/python
+                git:
+                    commit: 5b430ebccba1aabe188dc222a68a407be1358b4f
+                    remote: git@github.com:AIBootcamp13/upstageailab-cv-classification-cv_7.git
+                gpu: NVIDIA GeForce RTX 3090
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 10496
+                      memoryTotal: "25769803776"
+                      name: NVIDIA GeForce RTX 3090
+                      uuid: GPU-76606eb2-b917-02b5-40cd-eced9752e25b
+                host: instance-15551
+                memory:
+                    total: "270133542912"
+                os: Linux-5.4.0-167-generic-x86_64-with-glibc2.31
+                program: /data/ephemeral/home/upstageailab-cv-classification-cv_7/src/train/train.py
+                python: CPython 3.10.13
+                root: .
+                startedAt: "2025-07-08T18:02:05.024981Z"
+                writerId: h0o2b5asifkdq2ml1y3ppd7u91im6rd7
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.10.13
+        t:
+            "1":
+                - 1
+                - 5
+                - 9
+                - 41
+                - 49
+                - 50
+                - 53
+                - 63
+                - 80
+                - 103
+            "2":
+                - 1
+                - 5
+                - 9
+                - 41
+                - 49
+                - 50
+                - 53
+                - 63
+                - 80
+                - 103
+            "3":
+                - 2
+                - 7
+                - 13
+                - 16
+                - 66
+            "4": 3.10.13
+            "5": 0.21.0
+            "12": 0.21.0
+            "13": linux-x86_64
+data:
+    value:
+        apply_transform_prob: 0.8
+        batch_size: 32
+        data_dir: /data/ephemeral/home/upstageailab-cv-classification-cv_7/src/train/../../data
+        image_normalization:
+            mean:
+                - 0.485
+                - 0.456
+                - 0.406
+            std:
+                - 0.229
+                - 0.224
+                - 0.225
+        image_size:
+            - 224
+            - 224
+        num_workers: 16
+        persistent_workers: true
+        pin_memory: true
+        val_split: 0.2
+dropout:
+    value: 0.3
+lr:
+    value: 0.001
+model:
+    value:
+        _target_: src.model.timm_model.TimmClassifier
+        dropout: 0.3
+        lr: 0.001
+        name: swin_tiny_patch4_window7_224
+        num_classes: 17
+        weight_decay: 0.0001
+name:
+    value: swin_tiny_patch4_window7_224
+num_classes:
+    value: 17
+project_name:
+    value: document-classification
+seed:
+    value: 42
+train:
+    value:
+        accelerator: gpu
+        devices: 1
+        log_every_n_steps: 10
+        max_epochs: 25
+        precision: 16
+wandb:
+    value:
+        entity: CV-7
+        mode: offline
+        project: document-classification
+        run_name: swin_tiny_patch4_window7_224-2025-07-09_03-02-03
+weight_decay:
+    value: 0.0001

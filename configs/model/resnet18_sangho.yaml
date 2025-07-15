@@ -1,0 +1,6 @@
+_target_: src.model.timm_model.TimmClassifier
+name: resnet18
+dropout: 0.3
+lr: 0.001
+weight_decay: 0.0001
+num_classes: 17
