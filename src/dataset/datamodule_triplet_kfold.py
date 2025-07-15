@@ -26,7 +26,7 @@ from src.transform.custom_transform_ratio import get_augraphy_transform, get_tra
 
 class DocumentDataModule(pl.LightningDataModule):
     def __init__(self, 
-    data_dir="data", 
+    data_dir=f"{ROOT_DIR}/data", 
     batch_size=32, 
     num_workers=4, 
     persistent_workers=True,
@@ -34,7 +34,7 @@ class DocumentDataModule(pl.LightningDataModule):
     fold=0, 
     fold_path=f"{ROOT_DIR}/data/train_fold.csv", 
     val_split=0.2, 
-    image_size=(224, 224), 
+    image_size=(456, 456), 
     image_normalization={"mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}, 
     apply_transform_prob=0.8):
         super().__init__()
@@ -101,7 +101,7 @@ class DocumentDataModule(pl.LightningDataModule):
             self.train_dataset = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise, self.train_dataset_blur, self.train_dataset_shadow, self.train_dataset_brightness, self.train_dataset_img_comp, self.train_dataset_coarse_dropout])
             self.triplet_dataset = BalancedClass3and7Dataset(self.train_dataset, target_classes=[3, 7])
             
-            self.cutmix = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise]) 
+            # self.cutmix = torch.utils.data.ConcatDataset([self.train_dataset_no_augraphy, self.train_dataset_augraphy, self.train_dataset_gaussNoise]) 
 
             self.val_dataset_no_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=None, transform=self.transform_rotation)
             self.val_dataset_augraphy = DocumentDataset(val_df, self.data_dir, aug_pipeline=self.aug_pipeline, transform=self.transform_rotation)

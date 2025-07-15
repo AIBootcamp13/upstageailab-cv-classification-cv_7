@@ -54,13 +54,10 @@ def train(cfg):
         filename=f"{cfg.model.name}"
     )
     dm = DocumentDataModule(**cfg.data)
-    print("hi")
     model = instantiate(cfg.model)
-    print("hi2")
     trainer = Trainer(**cfg.train, callbacks=[early_stop_callback, checkpoint_callback], logger=wandb_logger)
-    print("hi3")
     trainer.fit(model, datamodule=dm)
-    print("hi4")
+
     
     # 학습 시간 및 best score 기록
     end_time = time.time()
