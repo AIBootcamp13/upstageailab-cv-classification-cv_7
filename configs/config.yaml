@@ -1,7 +1,8 @@
 defaults:
-  - model: resnet
-  - data: document
+  - model: efficientnetb5
+  - data: document_kfold
   - train: default
+  - wandb: wandb
 
 project_name: document-classification
 seed: 42

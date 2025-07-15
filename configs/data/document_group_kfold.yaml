@@ -1,0 +1,10 @@
+data_dir: data
+batch_size: 64
+num_workers: 32
+fold: 0
+num_folds: 5
+fold_path: /workspace/upstageailab-cv-classification-cv_7/data/train_group_kfold.csv  # 이 줄 수정
+image_size: [224, 224]
+augmentation_intensity: "medium"
+balance_classes: true
+use_val_augmentation: false
