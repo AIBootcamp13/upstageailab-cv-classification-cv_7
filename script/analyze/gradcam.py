@@ -12,12 +12,12 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-from src.dataset.datamodule_triplet_kfold import DocumentDataModule
 from torch.utils.data import DataLoader
 
 def analyze_gradcam(model, dm, fold):
   pred_list = defaultdict(lambda: {"img_name": [], "img": [], "pred": [], "label": []})
 
+  dm.setup("analyze")
   analyze_dataset = dm.analyze_dataset
   if analyze_dataset is None:
     raise ValueError("analyze_dataset is not initialized")
